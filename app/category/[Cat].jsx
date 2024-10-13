@@ -11,7 +11,7 @@ const Cat = () => {
     useEffect(()=>{
         const fetchData=async()=>{
             try {
-            const api=await axios.get('http://192.168.0.103:8080/get')
+            const api=await axios.get('http://192.168.0.2:8080/get')
             const res=api.data
             setdata(res)
     
@@ -22,11 +22,11 @@ const Cat = () => {
         fetchData()
     },[Cat])
     
-    const filterData = data.filter((item) => item.category.toLowerCase() === Cat.toLowerCase());
+    const filterData = data.filter((item) => item.category?.toLowerCase() === Cat.toLowerCase());
 
     const renderItem=({item})=>{
         return (
-        <View>
+        <View className=''>
                 <View className="rounded-2xl p-4 m-3 bg-white shadow-2xl" style={{ width: 160 }}>
       <TouchableOpacity onPress={() => router.push(`/detailScreen/${item?._id}`)}>
         <Image 
@@ -45,9 +45,9 @@ const Cat = () => {
     }
 
   return (
-    <View>
-      <Text>{Cat}</Text>
-      <FlatList data={filterData} renderItem={renderItem} showsVerticalScrollIndicator={false}/>
+    <View className='py-5'>
+      {/* <Text>{Cat}</Text> */}
+      <FlatList data={filterData} numColumns={2} renderItem={renderItem} showsVerticalScrollIndicator={false}/>
     </View>
   )
 }

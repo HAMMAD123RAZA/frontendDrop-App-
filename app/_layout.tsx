@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {Store,persistor} from '../rtk/Store'
 import { PersistGate } from 'redux-persist/integration/react';
+import { ScrollView } from 'react-native';
+import { LogBox } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -22,6 +24,8 @@ export default function RootLayout() {
     if (loaded) {
       SplashScreen.hideAsync();
     }
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested','SerializableStateInvariantMiddleware','A non-serializeabe value was detected in an action']);
+// LogBox.ignoreAllLogs()
   }, [loaded]);
 
   if (!loaded) {
@@ -41,6 +45,5 @@ export default function RootLayout() {
     </PersistGate>
 
     </Provider>
-
   );
 }

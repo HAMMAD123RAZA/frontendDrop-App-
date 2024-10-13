@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import CardUi from '../card/CardUi'
 import axios from 'axios'
 
+
 const Cards = () => {
     const [data, setData] = useState([])
     const [error, setError] = useState(null)
@@ -12,8 +13,7 @@ const Cards = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://192.168.0.103:8080/get');
-                // console.log(response.data)
+                const response = await axios.get(`http://192.168.100.10:8080/get`);
                 setData(response.data)  
             } catch (err) {
                 setError(err.message)  

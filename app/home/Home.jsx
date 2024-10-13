@@ -7,12 +7,9 @@ import SpecialCards from '../components/SpecialCards'
 
 const Home = () => {
   return (
-    <ScrollView>
-      <Headers/>
-      <Category/>
-      <Cards/>
-      <SpecialCards/>
-    </ScrollView>
+    <View>
+      <Text>sfsf</Text>
+    </View>
   )
 }
 
