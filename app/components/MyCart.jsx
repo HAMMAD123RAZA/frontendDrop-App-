@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, clearCart } from '../../rtk/CartSlice';  
+import axios from 'axios'
 
 const MyCart = () => {
     const [showAllItems, setShowAllItems] = useState(false);  
@@ -9,7 +10,23 @@ const MyCart = () => {
     const cartItems = useSelector(state => state.cart.items);  
     const totalQuantity = useSelector(state => state.cart.totalQuantity);
     const dispatch = useDispatch();
-
+    const handleSendEmail=async()=>{
+        try {
+            const orderDetails = cartItems.map(item => ({
+                name: item.name,
+                category: item.category,
+                price: item.price,
+                quantity: item.quantity
+              }));
+          
+            const api=await axios.post('http://192.168.100.6:8080/sendOrder',{
+                orderDetails
+            })
+            console.log(api.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const itemsToShow = showAllItems ? cartItems : cartItems.slice(0, 2);
 
     const sumUp = () => {
@@ -56,13 +73,13 @@ const MyCart = () => {
             <View className='p-4 mt-6 rounded-lg '>
             {cartItems.length > 2 && !showAllItems && (
                 <TouchableOpacity onPress={() => setShowAllItems(true)}>
-                    <Text className='text-blue-500 text-center'>Show more</Text>
+                    <Text className='text-blue-700 text-lg text-center'>Show more</Text>
                 </TouchableOpacity>
             )}
 
             {showAllItems && (
                 <TouchableOpacity onPress={() => setShowAllItems(false)}>
-                    <Text className='text-blue-700 text-center font-bold  '>Show less</Text>
+                    <Text className='text-blue-700 text-lg text-center font-bold  '>Show less</Text>
                 </TouchableOpacity>
             )}
 
@@ -92,8 +109,8 @@ const MyCart = () => {
                 <Text className='font-bold pt-4 text-lg text-blue-500'>{totalBill} PKR</Text>
             </View>
         </View>
-        <TouchableOpacity>
-            <Text  className='px-3 py-2 my-2 mx-9 bg-blue-500 rounded-3xl font-bold text-white text-center ' >Request</Text>
+        <TouchableOpacity onPress={handleSendEmail} >
+            <Text  className='px-3 p-3 text-lg my-2 mx-9 bg-blue-500 rounded-3xl font-bold text-white text-center ' >Request</Text>
             </TouchableOpacity>
 
 </View>

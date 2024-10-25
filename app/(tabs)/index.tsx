@@ -5,24 +5,27 @@ import Category from '../components/Category';
 import Cards from '../components/Cards';
 import SpecialCards from '../components/SpecialCards';
 
-const Index = () => {
-  // const [refreshing, setRefreshing] = useState(false);
+const index = () => {
+  const [refreshing, setRefreshing] = useState(false);
 
-  // // Function to handle the refresh event
-  // const onRefresh = useCallback(() => {
-  //   setRefreshing(true);
+  // Function to handle the refresh event
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
     
-  //   // Simulate fetching new data (or real logic for data fetching)
-  //   setTimeout(() => {
-  //     // You can fetch new data here and update your state
-  //     setRefreshing(false);
-  //   }, 2000); // Simulating a delay of 2 seconds
-  // }, []);
+    // Simulate fetching new data (or real logic for data fetching)
+    setTimeout(() => {
+      // You can fetch new data here and update your state
+      setRefreshing(false);
+    }, 2000); // Simulating a delay of 2 seconds
+  }, []);
 
   return (
     <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
-      <Headers />1
+      <Headers />
       <Category />
       <Cards />
       <SpecialCards />
@@ -30,4 +33,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default index;

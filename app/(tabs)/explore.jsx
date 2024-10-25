@@ -1,5 +1,5 @@
-import { View, FlatList, Text, TextInput, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState, useRef } from 'react';
+import { View, FlatList, Text, TextInput, TouchableOpacity, RefreshControl } from 'react-native';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import CardUi from '../card/CardUi';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,7 +11,8 @@ const explore = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [error, setError] = useState(null);
     const refRBSheet = useRef();
-    
+    const [refreshing, setrefreshing] = useState(false)
+
     const [selectedFilters, setSelectedFilters] = useState({
         price: null,
         category: null,
@@ -33,19 +34,31 @@ const explore = () => {
         },
     ];
 
-    useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://192.168.0.2:8080/get');
-                setData(response.data);
-                setFilteredData(response.data);
+                const api=await axios.get('http://192.168.100.5:8080/get')
+                setData(api.data);
+                setFilteredData(api.data);
             } catch (err) {
                 setError(err.message);
                 console.error("API fetch error: ", err);
             }
         };
+        useEffect(() => {
         fetchData();
     }, []);
+
+    const onRefresh=useCallback(async()=>{
+        setrefreshing(true)
+        try {
+            await fetchData()
+        } catch (error) {
+            console.log('error refreshing',error)
+        }
+        finally{
+            setrefreshing(false)
+        }
+    },[fetchData])
 
     useEffect(() => {
         let filtered = data;
@@ -67,12 +80,15 @@ if (selectedFilters.litre) {
 }
 
         if (searchQuery) {
-            filtered = filtered.filter(item =>
-                item.name.toLowerCase().includes(searchQuery.toLowerCase()) //checking our user input 
+            const query = searchQuery.toLowerCase();
+
+            filtered = filtered.filter(item => 
+                item.name.toLowerCase().includes(query) || 
+                item.price.toString().includes(query) 
             );
         }
-    
-        setFilteredData(filtered);
+
+setFilteredData(filtered);
     }, [searchQuery, data, selectedFilters]);
 
     const handleFilterSelect = (type, value) => {
@@ -95,7 +111,8 @@ if (selectedFilters.litre) {
                 <Text>Error: {error}</Text>
             ) : (
                 <FlatList 
-                keyboardShouldPersistTaps='handled'
+                refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={refreshing} />}
+                keyboardShouldPersistTaps='always'
                     data={filteredData}
                     renderItem={renderItem}
                     ListHeaderComponent={() => (
@@ -106,6 +123,7 @@ if (selectedFilters.litre) {
                                 style={{ flex: 1 }}
                                 value={searchQuery}
                                 onChangeText={text => setSearchQuery(text)}
+                                blurOnSubmit={false}
                             />
                             <View>
                             <TouchableOpacity onPress={() => refRBSheet.current.open()}>
