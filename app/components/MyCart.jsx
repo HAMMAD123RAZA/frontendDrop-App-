@@ -19,7 +19,7 @@ const MyCart = () => {
                 quantity: item.quantity
               }));
           
-            const api=await axios.post('http://192.168.100.6:8080/sendOrder',{
+            const api=await axios.post('http://192.168.100.7:8080/sendOrder',{
                 orderDetails
             })
             console.log(api.data)
