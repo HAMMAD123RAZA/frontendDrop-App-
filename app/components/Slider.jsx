@@ -64,9 +64,3 @@ keyExtractor={(item)=>item.id.toString()}
 }
 
 export default Slider
-
-
-
-
-
-

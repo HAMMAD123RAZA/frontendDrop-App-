@@ -13,6 +13,8 @@ const explore = () => {
     const refRBSheet = useRef();
     const [refreshing, setrefreshing] = useState(false)
 
+    
+
     const [selectedFilters, setSelectedFilters] = useState({
         price: null,
         category: null,
@@ -22,7 +24,7 @@ const explore = () => {
     const filterOptions = [
         {
             title: 'Price',
-            values: ['100-500', '500-3000', '3000-10000'],
+            values: [[100,500],[500,3000],[3000,10000]],
         },
         {
             title: 'Category',
@@ -30,13 +32,13 @@ const explore = () => {
         },
         {
             title: 'Litre',
-            values: ['1-10', '10-50'],
+            values: [[1,10],[10,50]]
         },
     ];
 
         const fetchData = async () => {
             try {
-                const api=await axios.get('http://192.168.100.7:8080/get')
+                const api=await axios.get('http://192.168.100.2:8080/get')
                 setData(api.data);
                 setFilteredData(api.data);
             } catch (err) {
@@ -62,35 +64,34 @@ const explore = () => {
 
     useEffect(() => {
         let filtered = data;
+    
         if (selectedFilters.price) {
-            const [minPrice, maxPrice] = selectedFilters.price.split('-').map(Number);
+            const [minPrice, maxPrice] = selectedFilters.price;
             filtered = filtered.filter(item => item.price >= minPrice && item.price <= maxPrice);
         }
     
-if (selectedFilters.category) {
-    filtered = filtered.filter(item => 
-        item.category?.toLowerCase() === selectedFilters.category?.toLowerCase() 
-    );
-}
-
-if (selectedFilters.litre) {
-    filtered = filtered.filter(item => 
-        item.litre === selectedFilters.litre
-    );
-}
-
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-
+        if (selectedFilters.litre) {
+            const [minLitre, maxLitre] = selectedFilters.litre;
+            filtered = filtered.filter(item => item.litre >= minLitre && item.litre <= maxLitre);
+        }
+    
+        if (selectedFilters.category) {
             filtered = filtered.filter(item => 
-                item.name.toLowerCase().includes(query) || 
-                item.price.toString().includes(query) 
+                item.category?.toLowerCase() === selectedFilters.category?.toLowerCase() 
             );
         }
-
-setFilteredData(filtered);
+    
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(item => 
+                item.name.toLowerCase().includes(query) || 
+                item.price.toString().includes(query)
+            );
+        }
+    
+        setFilteredData(filtered);
     }, [searchQuery, data, selectedFilters]);
-
+    
     const handleFilterSelect = (type, value) => {
         setSelectedFilters(prevFilters => ({
             ...prevFilters,

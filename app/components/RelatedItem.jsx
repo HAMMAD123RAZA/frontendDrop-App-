@@ -10,7 +10,7 @@ const RelatedItem = ({cat,id}) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response=await axios.get('http://192.168.100.7:8080/get')
+                const response=await axios.get('http://192.168.100.2:8080/get')
                 const filter=response.data.filter(item=>item.category===cat && item._id!==id)
                 setData(filter)  
             } catch (err) {

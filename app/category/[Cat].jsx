@@ -11,7 +11,7 @@ const Cat = () => {
     useEffect(()=>{
         const fetchData=async()=>{
             try {
-            const api=await axios.get('http://192.168.100.5:8080/get')
+            const api=await axios.get('http://192.168.100.2:8080/get')
             const res=api.data
             setdata(res)
     

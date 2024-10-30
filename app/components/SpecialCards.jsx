@@ -14,7 +14,7 @@ const SpecialCards = () => {
         const fetchData = async () => {
             try {
                 console.log("Fetching data from API...");
-                const response=await axios.get('http://192.168.100.7:8080/get')
+                const response=await axios.get('http://192.168.100.2:8080/get')
                 console.log("API response:", response.data);
                 setData(response.data);  
             } catch (err) {
